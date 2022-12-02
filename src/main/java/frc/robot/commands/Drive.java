@@ -12,7 +12,7 @@ public class Drive extends CommandBase {
         this.lJoystick = lJoystick;
         this.rJoystick = rJoystick;
 
-        addRequirements(this.drivetrain);
+        addRequirements(drivetrain);
     }
 
     @Override

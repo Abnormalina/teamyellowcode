@@ -8,10 +8,12 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.Drive;
-import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.MoveArm;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.AutoDrive;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -25,11 +27,14 @@ public class RobotContainer {
   Joystick rightJoystick = new Joystick(1);
 
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Drivetrain m_Drivetrain = new Drivetrain();
 
+  private final Arm m_Arm = new Arm();
+  JoystickButton raiseArmBtn = new JoystickButton(leftJoystick, 3);
+  JoystickButton lowerArmBtn = new JoystickButton(rightJoystick, 3);
 
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+
+
   private final Drive m_Drive = new Drive(m_Drivetrain, leftJoystick, rightJoystick);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -45,7 +50,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-
+    raiseArmBtn.whenHeld(new MoveArm(m_Arm, 0.5));
+    lowerArmBtn.whenHeld(new MoveArm(m_Arm, -0.5));
 
     m_Drivetrain.setDefaultCommand(m_Drive);
   }
@@ -57,6 +63,10 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return new SequentialCommandGroup (
+      new AutoDrive(m_Drivetrain, -0.5, -0.5).withTimeout(2),
+      new AutoDrive(m_Drivetrain, 0, 0)
+    );
+  
   }
 }

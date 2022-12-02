@@ -12,8 +12,8 @@ public class Drivetrain extends SubsystemBase {
         lSP = new VictorSP(0);
         rSP = new VictorSP(1);
 
-        lSP.setInverted(false);
-        rSP.setInverted(true);
+        lSP.setInverted(true);
+        rSP.setInverted(false);
     }
     public void drive(double lSpeed, double rSpeed){
         lSP.set(lSpeed);
